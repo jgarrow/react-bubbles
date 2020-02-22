@@ -24,8 +24,6 @@ const ColorList = ({ colors, updateColors }) => {
         axiosWithAuth()
             .put(`/colors/${colorToEdit.id}`, colorToEdit)
             .then(res => {
-                console.log("PUT request res: ", res);
-
                 const colorIndex = colors.findIndex(
                     color => color.id === colorToEdit.id
                 );
@@ -50,11 +48,17 @@ const ColorList = ({ colors, updateColors }) => {
     const deleteColor = color => {
         // make a delete request to delete this color
         axiosWithAuth()
-            .delete(`/colors/${colorToEdit.id}`, colorToEdit)
+            .delete(`/colors/${color.id}`, color)
             .then(res => {
-                console.log("DELETE request res: ", res);
-                updateColors();
-                setEditing(false);
+                const colorIndex = colors.findIndex(c => c.id === color.id);
+
+                let updatedColors = [...colors];
+
+                if (colorIndex > -1) {
+                    updatedColors.splice(colorIndex, 1);
+                }
+
+                updateColors(updatedColors);
             })
             .catch(err => console.log("Error deleting color: ", err));
     };
