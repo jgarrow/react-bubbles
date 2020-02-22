@@ -6,7 +6,7 @@ import BubblePage from "./components/BubblePage";
 import Login from "./components/Login";
 import "./styles.scss";
 
-function App() {
+const App = () => {
     return (
         <Router>
             <div className="App">
@@ -19,6 +19,6 @@ function App() {
             </div>
         </Router>
     );
-}
+};
 
 export default App;
