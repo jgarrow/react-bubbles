@@ -10,6 +10,12 @@ const ColorList = ({ colors, updateColors }) => {
     console.log(colors);
     const [editing, setEditing] = useState(false);
     const [colorToEdit, setColorToEdit] = useState(initialColor);
+    const [newColor, setNewColor] = useState({
+        color: "",
+        code: {
+            hex: ""
+        }
+    });
 
     const editColor = color => {
         setEditing(true);
@@ -61,6 +67,40 @@ const ColorList = ({ colors, updateColors }) => {
                 updateColors(updatedColors);
             })
             .catch(err => console.log("Error deleting color: ", err));
+    };
+
+    const handleNewColorChange = e => {
+        setNewColor({
+            ...newColor,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    // couldn't figure out how to make one dynamic handleChange function that could handle the nested `code` object inside of `newColor`
+    const handleNewColorHexChange = e => {
+        setNewColor({
+            ...newColor,
+            code: {
+                [e.target.name]: e.target.value
+            }
+        });
+    };
+
+    const handleSubmitNewColor = e => {
+        e.preventDefault();
+
+        axiosWithAuth()
+            .post("/colors", newColor)
+            .then(res => {
+                updateColors(res.data);
+                setNewColor({
+                    color: "",
+                    code: {
+                        hex: ""
+                    }
+                });
+            })
+            .catch(err => console.log("Error adding new color: ", err));
     };
 
     return (
@@ -125,6 +165,25 @@ const ColorList = ({ colors, updateColors }) => {
             )}
             <div className="spacer" />
             {/* stretch - build another form here to add a color */}
+            <form onSubmit={handleSubmitNewColor}>
+                <label htmlFor="newColorName">color name: </label>
+                <input
+                    id="newColorName"
+                    name="color"
+                    type="text"
+                    value={newColor.color}
+                    onChange={handleNewColorChange}
+                />
+                <label htmlFor="newColorHex">hex code: </label>
+                <input
+                    id="newColorHex"
+                    name="hex"
+                    type="text"
+                    value={newColor.code.hex}
+                    onChange={handleNewColorHexChange}
+                />
+                <button type="submit">Add color</button>
+            </form>
         </div>
     );
 };
