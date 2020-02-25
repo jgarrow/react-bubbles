@@ -15,7 +15,7 @@ const App = () => {
           Build a PrivateRoute component that will 
           display BubblePage when you're authenticated 
         */}
-                <PrivateRoute exact path="/bubbles" component={BubblePage} />
+                <PrivateRoute path="/bubbles" component={BubblePage} />
             </div>
         </Router>
     );
